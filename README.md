@@ -1,6 +1,11 @@
 Forge Like Setup 
 
-> Inspired by Laravel Forge.
+> Inspired by Laravel Forge. https://forge.laravel.com
+ 
+- Tested OS: 
+  - Ubuntu 24.04
+- Cloud Provider:
+  - Amazon EC2.
 
 ## Security Setup
 
@@ -10,24 +15,15 @@ Forge Like Setup
 - Allow SSH with users in `forge` group only.
 - Prevent brute-force attacks using fail2ban.
 
-Imagine you've created a fresh Ubuntu server and can SSH into it as root.
+Imagine you've created a fresh Ubuntu server and can SSH into it as root from your computer.
 
 ```bash
 ssh root@server-ip-address
 ```
 
-If your server does not allow to SSH as root by default but has another sudo user,
-you have to start a root login session after connecting to it.
+> If you SSH as another user, you have to start a root login session after connecting to it by running "sudo su" command.
 
-```bash
-# Replace vagrant by your actual username, e.g. ec2-user
-ssh vagrant@server-ip-address
-
-# Start a root login session after SSH successfully
-sudo su
-```
-
-On your server
+You are now in a root login session on your server.
 1. Download the `security-setup.sh` script, run and then remove it.
 
     ```bash
@@ -54,7 +50,7 @@ On your server
     chown -R forge:forge /home/forge/.ssh
     ```
   
-Finally, you have to ensure you can SSH into your server as forge and run "sudo" commands.
+Finally, back to your computer, please ensure you can SSH into your server as forge and run "sudo" commands.
 
 ```
 # Try to SSH into your server as forge.

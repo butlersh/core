@@ -25,10 +25,10 @@ PubkeyAuthentication yes
 
 AllowGroups forge"
 if ! echo "${SSHD_CONFIG}" | tee /etc/ssh/sshd_config.d/forge-init.conf; then
-    echo "Can't configure SSH!" && exit 1
+    echo "Can NOT configure SSH!" && exit 1
 fi
 
-systemctl restart sshd
+systemctl restart ssh
 
 sudo apt-get update
 
