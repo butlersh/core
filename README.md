@@ -1,46 +1,65 @@
-# Deploy PHP
+Forge Like Setup 
 
-### Usage
+> Inspired by Laravel Forge.
 
-Image you've created a fresh Ubuntu server and can SSH into it.
+## Security Setup
 
-On that server, run the command below as root.
+- Create a sudo user called `forge`.
+- Prevent SSH using root user or password.
+- Require SSH using public keys.
+- Allow SSH with users in `forge` group only.
+- Prevent brute-force attacks using fail2ban.
 
-```bash
-wget -O app-setup.sh https://raw.githubusercontent.com/sendcode-project/deploy-php/master/scripts/app-setup.sh
-
-bash app-setup.sh
-```
-
-> You will be asked for a password and an SSH public key. After installation, you will not be able to SSH into your server using root or password. You can only access using your SSH private key that associate with the SSH public key you added.
-
-- It creates a sudo user called forge.
-- It installs Nginx and PHP 8.3.
-
-After finishing, on your computer, use this command to SSH into your server.
+Imagine you've created a fresh Ubuntu server and can SSH into it as root.
 
 ```bash
-ssh -i /path/to/your/key.pem forge@server-ip-address
+ssh root@server-ip-address
 ```
 
-You are now logged in your server as "forge" user and can create a PHP site using the sample below.
+If your server does not allow to SSH as root by default but has another sudo user,
+you have to start a root login session after connecting to it.
 
 ```bash
-mkdir ~/demo.test/public -p
+# Replace vagrant by your actual username, e.g. ec2-user
+ssh vagrant@server-ip-address
 
-echo '<?php phpinfo();' > ~/demo.test/public/index.php
-
-
-# Download the site-setup.sh script then run it.
-wget -O site-setup.sh https://raw.githubusercontent.com/sendcode-project/deploy-php/master/scripts/site-setup.sh
-
-# You will be ask for domain, webroot and PHP version.
-# domain: demo.test
-# webroot: /home/forge/demo.test/public
-# php: 8.3
-sudo bash site-setup.sh
+# Start a root login session after SSH successfully
+sudo su
 ```
 
-> Replace "demo.test" with your specific user and point your domain to your server IP address.
+On your server
+1. Download the `security-setup.sh` script, run and then remove it.
 
-You may wait for a while due to your domain provider. Then, when visiting http://demo.test, you should see a PHP info page.
+    ```bash
+    wget -O security-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/security-setup.sh
+    
+    bash security-setup.sh
+    
+    rm security-setup.sh
+    ```
+
+2. You have to set password for the `forge` user.
+
+    ```bash
+    passwd forge
+    ```
+
+3. You have to set an authorized key to `forge` user.
+
+    ```bash
+    mkdir -p /home/forge/.ssh
+    
+    echo "Your SSH Public Key" >> /home/forge/.ssh/authorized_keys
+    
+    chown -R forge:forge /home/forge/.ssh
+    ```
+  
+Finally, you have to ensure you can SSH into your server as forge and run "sudo" commands.
+
+```
+# Try to SSH into your server as forge.
+ssh forge@server-ip-address
+
+# Try to run a sudo command on your server after SSH successfully.
+sudo apt-get update
+```
