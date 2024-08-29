@@ -4,8 +4,9 @@ Forge Like Setup
  
 - Tested OS: 
   - Ubuntu 24.04
+  - Ubuntu 22.04
 - Cloud Provider:
-  - Amazon EC2.
+  - Amazon EC2
 
 ## Security Setup
 
@@ -52,7 +53,7 @@ You are now in a root login session on your server.
   
 Finally, back to your computer, please ensure you can SSH into your server as forge and run "sudo" commands.
 
-```
+```bash
 # Try to SSH into your server as forge.
 ssh forge@server-ip-address
 
