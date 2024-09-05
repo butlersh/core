@@ -10,7 +10,7 @@
 
 ## Security Setup
 
-The main purpose is creating a sudo user called `forge` to manage it's server.
+The main purpose is creating a sudo user called `forge` to manage servers.
 
 - Create a sudo user called `forge`.
 - Prevent SSH using root user or password.
@@ -61,7 +61,8 @@ sudo apt-get update
 
 ## Firewall Setup
 
-I recommend you using firewall powered by your cloud provider. E.g. AWS Security Groups, Hetzner Cloud Firewall, ... Otherwise, you can use ufw (built on top of iptables).
+On your server, I recommend you using firewall powered by your cloud provider.
+E.g., AWS Security Groups, Hetzner Cloud Firewall, ... Otherwise, you can use ufw (built on top of iptables).
 
 ```bash
 # Allow SSH
@@ -89,7 +90,7 @@ rm nginx-setup.sh
 
 On your server, run these commands as root.
 ```bash
-wget -O security-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/php-setup.sh
+wget -O php-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/php-setup.sh
     
 bash php-setup.sh 8.3 # Replace 8.3 with your expected PHP version.
 
@@ -99,3 +100,26 @@ rm php-setup.sh
 ## MySQL Setup
 
 On your server, run these commands as root.
+
+```bash
+wget -O mysql-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/mysql-setup.sh
+    
+bash mysql-setup.sh
+
+rm mysql-setup.sh
+```
+
+## Configure a PHP site
+
+```bash
+mkdir -p /var/log/nginx/demo.test
+
+wget -O demo.test.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc/demo.test.conf
+
+mv demo.test.conf /etc/nginx/conf.d/
+
+# Replace 8.3 with your specific PHP version.
+# sed -i "s/8.3/8.4/g" /etc/nginx/conf.d/demo.test.conf;
+
+systemctl reload nginx
+```
