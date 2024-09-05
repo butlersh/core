@@ -73,3 +73,29 @@ sudo ufw allow 443
 # Turn on UFW
 echo "y" | sudo ufw enable
 ```
+
+## Nginx Setup
+
+On your server, run these commands as root.
+```bash
+wget -O security-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/nginx-setup.sh
+    
+bash nginx-setup.sh
+
+rm nginx-setup.sh
+```
+
+## PHP Setup
+
+On your server, run these commands as root.
+```bash
+wget -O security-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/php-setup.sh
+    
+bash php-setup.sh 8.3 # Replace 8.3 with your expected PHP version.
+
+rm php-setup.sh
+```
+
+## MySQL Setup
+
+On your server, run these commands as root.
