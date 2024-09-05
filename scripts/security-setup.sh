@@ -4,7 +4,7 @@ export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
 if id "forge" >/dev/null 2>&1; then
-    echo "The user \"forge\" already exists"
+    echo "The user \"forge\" already exists."
 else
     adduser --disabled-password --gecos "The root alternative" forge
 fi
@@ -28,10 +28,16 @@ if ! echo "${SSHD_CONFIG}" | tee /etc/ssh/sshd_config.d/forge-init.conf; then
     echo "Can NOT configure SSH!" && exit 1
 fi
 
+mkdir -p /home/forge/.ssh
+
+touch /home/forge/.ssh/authorized_keys
+
+chown -R forge:forge /home/forge/.ssh
+
 systemctl restart ssh
 
 sudo apt-get update
 
-sudo apt-get install -y fail2ban
+sudo apt-get install -y software-properties-common curl git unzip zip fail2ban
 
 systemctl restart fail2ban
