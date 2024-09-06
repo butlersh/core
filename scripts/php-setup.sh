@@ -1,29 +1,36 @@
 #!/usr/bin/env bash
 
-SUDO_USER="forge"
-PHP_VERSION="$1"
+if [ "$USER" != 'root' ]; then
+    echo 'root privileges required. Please run this script as root.'
+    exit 1
+fi
+
+export DEBIAN_FRONTEND=noninteractive
+
+# TODO: Should be customizable.
+C_USERNAME="forge"
+C_PHP_VERSION="$1"
 
 add-apt-repository -y ppa:ondrej/php
 
 apt-get update
 
-apt-get install -y software-properties-common curl git unzip zip
-
 apt-get install -y \
-    php"${PHP_VERSION}"-cli \
-    php"${PHP_VERSION}"-curl \
-    php"${PHP_VERSION}"-fpm \
-    php"${PHP_VERSION}"-gd \
-    php"${PHP_VERSION}"-imap \
-    php"${PHP_VERSION}"-mbstring \
-    php"${PHP_VERSION}"-mcrypt \
-    php"${PHP_VERSION}"-mysql \
-    php"${PHP_VERSION}"-pgsql \
-    php"${PHP_VERSION}"-sqlite3 \
-    php"${PHP_VERSION}"-xml
+    php"${C_PHP_VERSION}"-cli \
+    php"${C_PHP_VERSION}"-curl \
+    php"${C_PHP_VERSION}"-fpm \
+    php"${C_PHP_VERSION}"-gd \
+    php"${C_PHP_VERSION}"-imap \
+    php"${C_PHP_VERSION}"-mbstring \
+    php"${C_PHP_VERSION}"-mcrypt \
+    php"${C_PHP_VERSION}"-mysql \
+    php"${C_PHP_VERSION}"-pgsql \
+    php"${C_PHP_VERSION}"-sqlite3 \
+    php"${C_PHP_VERSION}"-xml \
+    php"${C_PHP_VERSION}"-zip
 
 php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
-sed -i "s/www-data/${SUDO_USER}/g" "/etc/php/${PHP_VERSION}/fpm/pool.d/www.conf";
+sed -i "s/www-data/${C_USERNAME}/g" "/etc/php/${C_PHP_VERSION}/fpm/pool.d/www.conf";
 
-systemctl restart php"${PHP_VERSION}"-fpm
+systemctl restart php"${C_PHP_VERSION}"-fpm

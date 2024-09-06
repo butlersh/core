@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
 
+if [ "$USER" != 'root' ]; then
+    echo 'root privileges required. Please run this script as root.'
+    exit 1
+fi
+
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
+
+# TODO: Should be customizable.
+C_USERNAME="forge"
+C_PASSWORD="secret"
 
 if id "forge" >/dev/null 2>&1; then
     echo "The user \"forge\" already exists."
 else
-    adduser --disabled-password --gecos "The root alternative" forge
+    adduser --disabled-password --gecos "The root alternative" "${C_USERNAME}"
 fi
+
+usermod --password $(echo "${C_PASSWORD}" | openssl passwd -1 -stdin) "${SC_USER}"
 
 usermod -aG sudo forge
 
