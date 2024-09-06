@@ -18,7 +18,7 @@ else
     adduser --disabled-password --gecos "The root alternative" "${C_USERNAME}"
 fi
 
-usermod --password $(echo "${C_PASSWORD}" | openssl passwd -1 -stdin) "${SC_USER}"
+usermod --password $(echo "${C_PASSWORD}" | openssl passwd -1 -stdin) "${C_USERNAME}"
 
 usermod -aG sudo forge
 
@@ -43,12 +43,20 @@ mkdir -p /home/forge/.ssh
 
 touch /home/forge/.ssh/authorized_keys
 
+chmod 660 /home/forge/.ssh/authorized_keys
+
 chown -R forge:forge /home/forge/.ssh
 
 systemctl restart ssh
 
-sudo apt-get update
+apt-get update
 
-sudo apt-get install -y software-properties-common curl git unzip zip fail2ban
+apt-get install -y software-properties-common curl git unzip zip fail2ban
 
 systemctl restart fail2ban
+
+apt-get upgrade -y
+
+apt-get autoremove
+
+apt-get autoclean
