@@ -45,6 +45,12 @@ touch /home/forge/.ssh/authorized_keys
 
 chmod 660 /home/forge/.ssh/authorized_keys
 
+# Because DigitalOcean or Hetzner Cloud allows to SSH using root, so I just copy these keys.
+# Thus, right after provision process, I can SSH using forge without adding additional SSH keys.
+if [ -f /root/.ssh/authorized_keys ]; then
+    cat /root/.ssh/authorized_keys > /home/forge/.ssh/authorized_keys
+fi
+
 chown -R forge:forge /home/forge/.ssh
 
 systemctl restart ssh
