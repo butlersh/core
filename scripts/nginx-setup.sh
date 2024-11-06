@@ -1,12 +1,28 @@
 #!/usr/bin/env bash
 
+# ./nginx-setup.sh --user=forge
+
 if [ "$USER" != 'root' ]; then
-    echo 'root privileges required. Please run this script as root.'
+    echo '[error] root privileges required. Please run this script as root.'
     exit 1
 fi
 
-# TODO: Should be customizable.
-C_USERNAME="forge"
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
+
+F_USERNAME="forge"
+
+for OPTION in "$@"
+do
+    NAME="$(cut -d'=' -f1 <<<"$OPTION")"
+    VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
+
+    if [ "$NAME" = '--user' ]; then
+        F_USERNAME="$VALUE"
+    else
+        echo "[error] Unrecognized option $NAME"
+    fi
+done
 
 apt-get install -y nginx
 
@@ -26,4 +42,4 @@ wget -O fastcgi-php.conf https://raw.githubusercontent.com/confetticode/forge-li
 mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
 mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf
 
-sed -i "s/www-data/${C_USERNAME}/g" /etc/nginx/nginx.conf;
+sed -i "s/www-data/${F_USERNAME}/g" /etc/nginx/nginx.conf;
