@@ -23,6 +23,7 @@ do
         F_MYSQL_VERSION="$VALUE"
     else
         echo "[error] Unrecognized option $NAME"
+        exit 1
     fi
 done
 

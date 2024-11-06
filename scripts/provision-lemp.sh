@@ -27,6 +27,7 @@ do
         F_MYSQL_VERSION="$VALUE"
     else
         echo "[error] Unrecognized option $NAME"
+        exit 1
     fi
 done
 
@@ -41,7 +42,7 @@ wget -O nginx-setup.sh https://raw.githubusercontent.com/confetticode/forge-like
 wget -O php-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/provision-lemp/scripts/php-setup.sh --quiet
 wget -O mysql-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/provision-lemp/scripts/mysql-setup.sh --quiet
 
-chmod +x "*-setup.sh"
+chmod +x *-setup.sh
 
 echo 'Run security-setup.sh'
 ./security-setup.sh --user="$F_USERNAME"

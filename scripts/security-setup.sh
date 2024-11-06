@@ -25,6 +25,7 @@ do
         F_USERNAME="$VALUE"
     else
         echo "[error] Unrecognized option $NAME"
+        exit 1
     fi
 done
 

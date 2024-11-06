@@ -23,6 +23,7 @@ do
         F_PHP_VERSION="$VALUE"
     else
         echo "[error] Unrecognized option $NAME"
+        exit 1
     fi
 done
 
@@ -46,8 +47,12 @@ apt-get install -y \
 
 php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
+# user = forge
+# group = forge
 sed -i "s/www-data/${F_USERNAME}/g" "/etc/php/${F_PHP_VERSION}/fpm/pool.d/www.conf";
-#sed -i "s/www-data/[www]/g" "/etc/php/[PHP ${F_PHP_VERSION}]/fpm/pool.d/www.conf";
+
+# Change the pool name
+sed -i "s/\[www\]/\[PHP $F_PHP_VERSION\]/g" "/etc/php/$F_PHP_VERSION/fpm/pool.d/www.conf";
 
 systemctl restart php"${F_PHP_VERSION}"-fpm
 
