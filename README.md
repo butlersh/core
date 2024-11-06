@@ -12,6 +12,7 @@
 ## TODOs
 
 - Document a simple backup helper for Laravel
+- Document for the provision-lemp.sh script
 
 ## License (MIT)
 
