@@ -25,7 +25,8 @@ do
     fi
 done
 
-apt-get install -y nginx
+# Install nginx with certbot to use free SSL via Letsencrypt.
+apt-get install -y nginx certbot python3-certbot-nginx
 
 if [ -d /etc/nginx ]; then
   rm -rf /etc/nginx.old
