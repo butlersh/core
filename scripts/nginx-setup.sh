@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts"
+F_CONFIG_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/etc"
+
+wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
+
 # ./nginx-setup.sh --user=forge
-
-wget -O pre-script.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/pre-script.sh --quiet
-
-chmod +x pre-script.sh
-
-./pre-script.sh
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
@@ -39,8 +38,8 @@ git clone https://github.com/h5bp/server-configs-nginx.git /etc/nginx
 
 mkdir -p /etc/nginx/extra
 
-wget -O fastcgi.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/etc/fastcgi.conf --quiet
-wget -O fastcgi-php.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/etc/fastcgi-php.conf --quiet
+wget -O fastcgi.conf "$F_CONFIG_URL/fastcgi.conf" --quiet
+wget -O fastcgi-php.conf "$F_CONFIG_URL/fastcgi-php.conf" --quiet
 
 mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
 mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf

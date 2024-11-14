@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts"
+
+wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
+
 # ./security-setup.sh --user=forge
-
-wget -O pre-script.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/pre-script.sh --quiet
-
-chmod +x pre-script.sh
-
-./pre-script.sh
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a

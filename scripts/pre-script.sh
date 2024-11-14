@@ -8,13 +8,15 @@ fi
 
 OS_DESC="$(lsb_release -a | grep 'Description' | awk '{print $2 " "  $3}')"
 
-# Testing on Ubuntu 24.04
-# TODO: Pending testing on Ubuntu 22.04 and Ubuntu 20.04
+# Testing on Ubuntu 22.04 and 24.04
 case "$OS_DESC" in
+    "Ubuntu 22.04")
+        # If the OS is supported, it just continue this script.
+    ;;
     "Ubuntu 24.04")
         # If the OS is supported, it just continue this script.
     ;;
     *)
-        echo "[forge.ERROR] Unsupported OS, currently supported Ubuntu 24.04"
+        echo "[forge.ERROR] Unsupported OS, currently supported Ubuntu 22.04 and 24.04"
     ;;
 esac

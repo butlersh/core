@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts"
+
+wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
+
 # ./php-setup.sh --user=forge --version=8.3
 
-wget -O pre-script.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/pre-script.sh --quiet
-
-chmod +x pre-script.sh
-
-./pre-script.sh
+locale-gen en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 export DEBIAN_FRONTEND=noninteractive
 

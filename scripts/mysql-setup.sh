@@ -2,11 +2,9 @@
 
 # ./mysql-setup.sh --version=8.0
 
-wget -O pre-script.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/pre-script.sh --quiet
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts"
 
-chmod +x pre-script.sh
-
-./pre-script.sh
+wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
 
 export DEBIAN_FRONTEND=noninteractive
 
