@@ -37,10 +37,10 @@ cd /root/provision/ || exit
 
 echo 'Download scripts'
 
-wget -O security-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/security-setup.sh --quiet
-wget -O nginx-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/nginx-setup.sh --quiet
-wget -O php-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/php-setup.sh --quiet
-wget -O mysql-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/mysql-setup.sh --quiet
+wget -O security-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/security-setup.sh --quiet
+wget -O nginx-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/nginx-setup.sh --quiet
+wget -O php-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/php-setup.sh --quiet
+wget -O mysql-setup.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/mysql-setup.sh --quiet
 
 chmod +x *-setup.sh
 

@@ -38,8 +38,8 @@ git clone https://github.com/h5bp/server-configs-nginx.git /etc/nginx
 
 mkdir -p /etc/nginx/extra
 
-wget -O fastcgi.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc/fastcgi.conf --quiet
-wget -O fastcgi-php.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc/fastcgi-php.conf --quiet
+wget -O fastcgi.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/etc/fastcgi.conf --quiet
+wget -O fastcgi-php.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/etc/fastcgi-php.conf --quiet
 
 mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
 mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf
