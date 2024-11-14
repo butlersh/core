@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts"
-F_CONFIG_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/etc"
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts"
+F_CONFIG_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc"
 
 wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
 

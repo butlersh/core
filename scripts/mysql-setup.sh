@@ -2,7 +2,7 @@
 
 # ./mysql-setup.sh --version=8.0
 
-F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts"
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts"
 
 wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
 
