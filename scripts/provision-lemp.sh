@@ -32,7 +32,7 @@ done
 
 mkdir -p /root/provision/
 
-cd /root/provision/ || exit
+cd /root/provision/ || exit 1
 
 echo '[forge.INFO] Download setup scripts'
 
@@ -40,6 +40,8 @@ wget -qO- "$F_SCRIPTS_URL/security-setup.sh" > security-setup.sh
 wget -qO- "$F_SCRIPTS_URL/nginx-setup.sh" > nginx-setup.sh
 wget -qO- "$F_SCRIPTS_URL/php-setup.sh" > php-setup.sh
 wget -qO- "$F_SCRIPTS_URL/mysql-setup.sh" > mysql-setup.sh
+
+chmod +x *.sh
 
 echo '[forge.INFO] Run security-setup.sh'
 ./security-setup.sh --user="$F_USERNAME"
@@ -55,3 +57,7 @@ echo '[forge.INFO] Run mysql-setup.sh'
 
 echo '[forge.INFO] Remove setup scripts'
 rm -rf "*-setup.sh"
+
+cd /root || exit 1
+
+rm -rf provision
