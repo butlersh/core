@@ -13,6 +13,9 @@
 
 - Document a simple backup helper for Laravel
 - Document for the provision-lemp.sh script
+    ```bash
+    wget -qO- "https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/provision-lemp.sh" | bash
+    ```
 
 ## License (MIT)
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# ./nginx-setup.sh --user=forge
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts"
+F_CONFIG_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc"
 
-if [ "$USER" != 'root' ]; then
-    echo '[error] root privileges required. Please run this script as root.'
-    exit 1
-fi
+wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
+
+# ./nginx-setup.sh --user=forge
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
@@ -20,7 +20,7 @@ do
     if [ "$NAME" = '--user' ]; then
         F_USERNAME="$VALUE"
     else
-        echo "[error] Unrecognized option $NAME"
+        echo "[forge.ERROR] Unrecognized option $NAME"
         exit 1
     fi
 done
@@ -38,8 +38,8 @@ git clone https://github.com/h5bp/server-configs-nginx.git /etc/nginx
 
 mkdir -p /etc/nginx/extra
 
-wget -O fastcgi.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc/fastcgi.conf --quiet
-wget -O fastcgi-php.conf https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc/fastcgi-php.conf --quiet
+wget -O fastcgi.conf "$F_CONFIG_URL/fastcgi.conf" --quiet
+wget -O fastcgi-php.conf "$F_CONFIG_URL/fastcgi-php.conf" --quiet
 
 mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
 mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf

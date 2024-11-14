@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# ./security-setup.sh --user=forge
+F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts"
 
-if [ "$USER" != 'root' ]; then
-    echo '[error] root privileges required. Please run this script as root.'
-    exit 1
-fi
+wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
+
+# ./security-setup.sh --user=forge
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
@@ -24,7 +23,7 @@ do
     if [ "$NAME" = '--user' ]; then
         F_USERNAME="$VALUE"
     else
-        echo "[error] Unrecognized option $NAME"
+        echo "[forge.ERROR] Unrecognized option $NAME"
         exit 1
     fi
 done
@@ -53,7 +52,7 @@ PubkeyAuthentication yes
 
 AllowGroups $F_USERNAME"
 if ! echo "${SSHD_CONFIG}" | tee "/etc/ssh/sshd_config.d/$F_USERNAME-init.conf"; then
-    echo "[error] Can NOT configure SSH!" && exit 1
+    echo "[forge.ERROR] Can NOT configure SSH!" && exit 1
 fi
 
 mkdir -p "/home/$F_USERNAME/.ssh"
