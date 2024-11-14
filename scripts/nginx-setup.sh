@@ -2,10 +2,11 @@
 
 # ./nginx-setup.sh --user=forge
 
-if [ "$USER" != 'root' ]; then
-    echo '[error] root privileges required. Please run this script as root.'
-    exit 1
-fi
+wget -O pre-script.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/pre-script.sh --quiet
+
+chmod +x pre-script.sh
+
+./pre-script.sh
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
@@ -20,7 +21,7 @@ do
     if [ "$NAME" = '--user' ]; then
         F_USERNAME="$VALUE"
     else
-        echo "[error] Unrecognized option $NAME"
+        echo "[forge.ERROR] Unrecognized option $NAME"
         exit 1
     fi
 done

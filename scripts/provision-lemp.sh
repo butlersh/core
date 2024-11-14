@@ -3,7 +3,7 @@
 # ./security-setup.sh --user=forge --php=8.3 --mysql=8.0
 
 if [ "$USER" != 'root' ]; then
-    echo '[error] root privileges required. Please run this script as root.'
+    echo '[forge.ERROR] root privileges required. Please run this script as root.'
     exit 1
 fi
 
@@ -26,7 +26,7 @@ do
     elif [ "$NAME" = '--mysql' ]; then
         F_MYSQL_VERSION="$VALUE"
     else
-        echo "[error] Unrecognized option $NAME"
+        echo "[forge.ERROR] Unrecognized option $NAME"
         exit 1
     fi
 done

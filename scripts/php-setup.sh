@@ -2,10 +2,11 @@
 
 # ./php-setup.sh --user=forge --version=8.3
 
-if [ "$USER" != 'root' ]; then
-    echo '[error] root privileges required. Please run this script as root.'
-    exit 1
-fi
+wget -O pre-script.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/pre-script.sh --quiet
+
+chmod +x pre-script.sh
+
+./pre-script.sh
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -22,7 +23,7 @@ do
     elif [ "$NAME" = '--version' ]; then
         F_PHP_VERSION="$VALUE"
     else
-        echo "[error] Unrecognized option $NAME"
+        echo "[forge.ERROR] Unrecognized option $NAME"
         exit 1
     fi
 done

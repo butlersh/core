@@ -25,7 +25,7 @@ do
     if [ "$NAME" = '--user' ]; then
         F_USERNAME="$VALUE"
     else
-        echo "[error] Unrecognized option $NAME"
+        echo "[forge.ERROR] Unrecognized option $NAME"
         exit 1
     fi
 done
@@ -54,7 +54,7 @@ PubkeyAuthentication yes
 
 AllowGroups $F_USERNAME"
 if ! echo "${SSHD_CONFIG}" | tee "/etc/ssh/sshd_config.d/$F_USERNAME-init.conf"; then
-    echo "[error] Can NOT configure SSH!" && exit 1
+    echo "[forge.ERROR] Can NOT configure SSH!" && exit 1
 fi
 
 mkdir -p "/home/$F_USERNAME/.ssh"

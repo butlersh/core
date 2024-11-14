@@ -2,21 +2,11 @@
 
 # ./mysql-setup.sh --version=8.0
 
-if [ "$USER" != 'root' ]; then
-    echo '[forge.ERROR]: root privileges required. Please run this script as root.'
-    exit 1
-fi
+wget -O pre-script.sh https://raw.githubusercontent.com/confetticode/forge-like-setup/pre-script/scripts/pre-script.sh --quiet
 
-OS_DESC="$(lsb_release -a | grep 'Description' | awk '{print $2 " "  $3}')"
+chmod +x pre-script.sh
 
-case "$OS_DESC" in
-    "Ubuntu 24.04")
-        # If the OS is supported, it just continue this script.
-    ;;
-    *)
-        echo "[forge.ERROR] Unsupported OS, currently supported Ubuntu 24.04"
-    ;;
-esac
+./pre-script.sh
 
 export DEBIAN_FRONTEND=noninteractive
 
