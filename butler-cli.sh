@@ -34,7 +34,7 @@ user_setup() {
 
 nginx_setup() {
   wget -qO- "$B_SCRIPTS_URL/nginx-setup.sh" > nginx-setup.sh
-  
+
   chmod +x nginx-setup.sh
 
   ./nginx-setup.sh --user="$1"
@@ -126,8 +126,8 @@ case $COMMAND in
     done
     user_setup "$B_USER"
 
-    if [ "$B_WEB" != "nginx" ]; then
-      nginx_setup "$B_WEB"
+    if [ "$B_WEB" = "nginx" ]; then
+      nginx_setup "$B_USER"
     fi
 
     if [ "$B_MYSQL" != "none" ]; then
