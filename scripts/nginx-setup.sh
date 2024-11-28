@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
 
-F_SCRIPTS_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts"
-F_CONFIG_URL="https://raw.githubusercontent.com/confetticode/forge-like-setup/main/etc"
+B_SCRIPTS_URL="https://raw.githubusercontent.com/butlersh/core/main/scripts"
+B_CONFIG_URL="https://raw.githubusercontent.com/butlersh/core/main/config"
 
-wget -qO- "$F_SCRIPTS_URL/pre-script.sh" | bash
-
-# ./nginx-setup.sh --user=forge
+wget -qO- "$B_SCRIPTS_URL/pre-script.sh" | bash
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
-F_USERNAME="forge"
+B_USERNAME="forge"
 
 for OPTION in "$@"
 do
@@ -18,9 +16,9 @@ do
     VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
 
     if [ "$NAME" = '--user' ]; then
-        F_USERNAME="$VALUE"
+        B_USERNAME="$VALUE"
     else
-        echo "[forge.ERROR] Unrecognized option $NAME"
+        echo "butlersh.ERROR: Unrecognized option $NAME"
         exit 1
     fi
 done
@@ -38,12 +36,12 @@ git clone https://github.com/h5bp/server-configs-nginx.git /etc/nginx
 
 mkdir -p /etc/nginx/extra
 
-wget -O fastcgi.conf "$F_CONFIG_URL/fastcgi.conf" --quiet
-wget -O fastcgi-php.conf "$F_CONFIG_URL/fastcgi-php.conf" --quiet
+wget -O fastcgi.conf "$B_CONFIG_URL/fastcgi.conf" --quiet
+wget -O fastcgi-php.conf "$B_CONFIG_URL/fastcgi-php.conf" --quiet
 
 mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
 mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf
 
-sed -i "s/www-data/${F_USERNAME}/g" /etc/nginx/nginx.conf;
+sed -i "s/www-data/${B_USERNAME}/g" /etc/nginx/nginx.conf;
 
 systemctl restart nginx

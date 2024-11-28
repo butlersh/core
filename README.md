@@ -1,21 +1,18 @@
-# Forge-Like Setup 
+# Butlersh Core
 
-> Inspired by Laravel Forge. https://forge.laravel.com
-
-> The main purpose is creating a sudo user called `forge` to manage servers instead of using `root`.
+Bash and config files for server management.
 
 ## Usage
 
-- [Fresh Ubuntu Server Setup](https://blog.confetticode.com/fresh-ubuntu-server-setup)
-- [The LEMP stack](https://blog.confetticode.com/lemp-stack-for-a-forge-like-ubuntu-server)
+```bash
+./security-setup.sh --user=forge
 
-## TODOs
+./nginx-setup.sh --user=forge
 
-- Document a simple backup helper for Laravel
-- Document for the provision-lemp.sh script
-    ```bash
-    wget -qO- "https://raw.githubusercontent.com/confetticode/forge-like-setup/main/scripts/provision-lemp.sh" | bash
-    ```
+./php-setup.sh --user=forge --version=8.4
+
+./mysql-setup.sh --version=8.0
+```
 
 ## License (MIT)
 

@@ -2,7 +2,7 @@
 
 # It's must be run as root.
 if [ "$USER" != 'root' ]; then
-    echo '[forge.ERROR] root privileges required. Please run this script as root.'
+    echo 'butlersh.ERROR: root privileges required. Please run this script as root.'
     exit 1
 fi
 
@@ -17,7 +17,7 @@ fi
 #        # If the OS is supported, it just continue this script.
 #    ;;
 #    *)
-#        echo "[forge.ERROR] Unsupported OS, currently supported Ubuntu 22.04 and 24.04"
+#        echo "butlersh.ERROR: Unsupported OS, currently supported Ubuntu 22.04 and 24.04"
 #        exit 1
 #    ;;
 #esac
