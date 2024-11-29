@@ -27,7 +27,7 @@ Here are other available scripts and their options.
 ```bash
 ./nginx-setup.sh --user=forge
 
-./php-setup.sh --user=forge --version=8.4
+./php-setup.sh --user=forge --group=forge --version=8.4
 
 ./mysql-setup.sh --version=8.0
 ```

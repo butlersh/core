@@ -11,7 +11,7 @@ export LC_ALL=en_US.UTF-8
 export DEBIAN_FRONTEND=noninteractive
 
 B_USER="forge"
-B_GROUP="forge"
+B_GROUP="$B_USER"
 B_PHP_VERSION="$1"
 
 for OPTION in "$@"
@@ -21,6 +21,8 @@ do
 
     if [ "$NAME" = '--user' ]; then
         B_USER="$VALUE"
+    elif [ "$NAME" = '--group' ]; then
+        B_GROUP="$VALUE"
     elif [ "$NAME" = '--version' ]; then
         B_PHP_VERSION="$VALUE"
     else
@@ -28,6 +30,8 @@ do
         exit 1
     fi
 done
+
+# TODO: Check if group exists.
 
 add-apt-repository -y ppa:ondrej/php
 
@@ -48,12 +52,12 @@ apt-get install -y \
     php"${B_PHP_VERSION}"-xml \
     php"${B_PHP_VERSION}"-zip
 
-php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
+php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin/ --filename=composer
 
 # user = www-data
-sed -i "s/user = www-data/${B_USER}/g" "/etc/php/${B_PHP_VERSION}/fpm/pool.d/www.conf";
+sed -i "s/user = www-data/user = ${B_USER}/g" "/etc/php/${B_PHP_VERSION}/fpm/pool.d/www.conf";
 # group = www-data
-sed -i "s/group = www-data/${B_GROUP}/g" "/etc/php/${B_PHP_VERSION}/fpm/pool.d/www.conf";
+sed -i "s/group = www-data/group = ${B_GROUP}/g" "/etc/php/${B_PHP_VERSION}/fpm/pool.d/www.conf";
 
 # Change the pool name
 sed -i "s/\[www\]/\[PHP $B_PHP_VERSION\]/g" "/etc/php/$B_PHP_VERSION/fpm/pool.d/www.conf";
@@ -61,10 +65,10 @@ sed -i "s/\[www\]/\[PHP $B_PHP_VERSION\]/g" "/etc/php/$B_PHP_VERSION/fpm/pool.d/
 systemctl restart php"${B_PHP_VERSION}"-fpm
 
 # Allow to run "sudo systemctl [reload|restart|status] php*-fpm" without password prompt.
-export FORGE_PHP_FPM_ACTIONS="
+export PHP_FPM_ACTIONS="
 $B_USER ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload php*-fpm
 $B_USER ALL=(ALL) NOPASSWD: /usr/bin/systemctl restart php*-fpm
 $B_USER ALL=(ALL) NOPASSWD: /usr/bin/systemctl status php*-fpm"
-if ! echo "${FORGE_PHP_FPM_ACTIONS}" | tee "/etc/sudoers.d/$B_USER"; then
+if ! echo "${PHP_FPM_ACTIONS}" | tee "/etc/sudoers.d/$B_USER"; then
     echo "butlersh.WARNING: Can not configure /etc/sudoers.d/$B_USER file. You have to configure it by yourself."
 fi
