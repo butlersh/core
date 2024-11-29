@@ -7,7 +7,7 @@ Script and configuration files for server management.
 On a Ubuntu server, download the **security-setup.sh** script.
 
 ```bash
-wget -qO- "https://raw.githubusercontent.com/butlersh/core/check/scripts/security-setup.sh" > security-setup.sh
+wget -qO- "https://raw.githubusercontent.com/butlersh/core/main/scripts/security-setup.sh" > security-setup.sh
 ```
 
 Make it executable

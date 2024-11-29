@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/check"
+B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
 
 wget -qO- "$B_BASE_URL/lib/check.sh" | bash
 
@@ -50,7 +50,7 @@ PasswordAuthentication no
 PermitEmptyPasswords no
 PubkeyAuthentication yes
 
-AllowGroups $B_USER"
+AllowGroups $B_GROUP"
 if ! echo "${SSHD_CONFIG}" | tee "/etc/ssh/sshd_config.d/$B_USER-init.conf"; then
     echo "butlersh.ERROR: Can NOT configure SSH!" && exit 1
 fi

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/check"
+B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
 
 wget -qO- "$B_BASE_URL/lib/check.sh" | bash
 

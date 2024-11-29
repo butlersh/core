@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/check"
-B_CONFIG_URL="https://raw.githubusercontent.com/butlersh/core/check/config"
+B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
+B_CONFIG_URL="https://raw.githubusercontent.com/butlersh/core/main/config"
 
 wget -qO- "$B_BASE_URL/lib/check.sh" | bash
 
