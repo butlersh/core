@@ -4,10 +4,16 @@ Script and configuration files for server management.
 
 ## Usage
 
-E.g., Download the security-setup.sh
+On a Ubuntu server, download the **security-setup.sh** script.
 
 ```bash
 wget -qO- "https://raw.githubusercontent.com/butlersh/core/check/scripts/security-setup.sh" > security-setup.sh
+```
+
+Make it executable
+
+```bash
+chmod +x security-setup.sh
 ```
 
 Run it with some options

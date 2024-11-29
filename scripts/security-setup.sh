@@ -25,7 +25,8 @@ do
     fi
 done
 
-B_GROUP=B_USER
+# TODO: Might it allow --group=<group_name> option?
+B_GROUP="$B_USER"
 
 if id "$B_USER" >/dev/null 2>&1; then
     echo "butlersh.INFO: The user \"$B_USER\" already exists."
