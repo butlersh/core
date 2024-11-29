@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-B_SCRIPTS_URL="https://raw.githubusercontent.com/butlersh/core/main/scripts"
+B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
 B_CONFIG_URL="https://raw.githubusercontent.com/butlersh/core/main/config"
 
-wget -qO- "$B_SCRIPTS_URL/pre-script.sh" | bash
+wget -qO- "$B_BASE_URL/lib/check.sh" | bash
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
-B_USERNAME="forge"
+B_USER="forge"
 
 for OPTION in "$@"
 do
@@ -16,7 +16,7 @@ do
     VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
 
     if [ "$NAME" = '--user' ]; then
-        B_USERNAME="$VALUE"
+        B_USER="$VALUE"
     else
         echo "butlersh.ERROR: Unrecognized option $NAME"
         exit 1
@@ -42,6 +42,6 @@ wget -O fastcgi-php.conf "$B_CONFIG_URL/fastcgi-php.conf" --quiet
 mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
 mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf
 
-sed -i "s/www-data/${B_USERNAME}/g" /etc/nginx/nginx.conf;
+sed -i "s/www-data/${B_USER}/g" /etc/nginx/nginx.conf;
 
 systemctl restart nginx
