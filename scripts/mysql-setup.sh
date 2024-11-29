@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-B_SCRIPTS_URL="https://raw.githubusercontent.com/butlersh/core/main/scripts"
+B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/check"
 
-wget -qO- "$B_SCRIPTS_URL/pre-script.sh" | bash
+wget -qO- "$B_BASE_URL/lib/check.sh" | bash
 
 export DEBIAN_FRONTEND=noninteractive
 
