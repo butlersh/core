@@ -1,4 +1,4 @@
-#!/usr/bin/env/bash
+#!/usr/bin/env bash
 
 B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/jenkins-setup"
 
