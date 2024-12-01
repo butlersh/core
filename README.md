@@ -30,6 +30,8 @@ Here are other available scripts and their options.
 ./php-setup.sh --user=forge --group=forge --version=8.4
 
 ./mysql-setup.sh --version=8.0
+
+./jenkins-setup.sh --port=8080 --domain=jenkins.butlersh.net
 ```
 
 ## License (MIT)
