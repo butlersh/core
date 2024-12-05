@@ -18,10 +18,9 @@ version() {
 }
 
 B_USER="forge"
+B_GROUP="forge"
 # TODO: Should it be passed via --password=<password> option or prompt?
 B_PASSWORD="secret"
-# TODO: Might it allow --group=<group_name> option?
-B_GROUP="$B_USER"
 
 for OPTION in "$@"
 do
@@ -36,6 +35,7 @@ do
         exit 0
     elif [ "$NAME" = '--user' ]; then
         B_USER="$VALUE"
+        B_GROUP="$B_USER" # TODO: Might it allow --group=<group_name> option?
     else
         echo "butlersh.ERROR: Unrecognized option $NAME."
         exit 1
