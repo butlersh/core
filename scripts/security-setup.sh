@@ -1,23 +1,40 @@
 #!/usr/bin/env bash
 
-B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
+help() {
+  echo -e "\e[33mDescription:\e[0m"
+  echo "  Set up security for a fresh server"
+  echo
+  echo -e "\e[33mOptions:\e[0m"
+  echo -e "      \e[32m--user=USER\e[0m  The user name you want to create \e[33m[default: \"forge\"]\e[0m"
+  echo -e "  \e[32m-h,\e[0m \e[32m--help\e[0m       Display help for the given command. When no command is given display help for the \e[33mlist\e[0m command"
+  echo -e "  \e[32m-V,\e[0m \e[32m--version\e[0m    Display this application version"
+  echo
+  echo -e "\e[33mHelp:\e[0m"
+  echo -e "  Running \e[32m./security-setup.sh --user=forge\e[0m will create a sudo user called \e[32mforge\e[0m."
+}
 
-wget -qO- "$B_BASE_URL/lib/check.sh" | bash
-
-export DEBIAN_FRONTEND=noninteractive
-export NEEDRESTART_MODE=a
-
-# TODO: Should it be customizable via --password=<password> or prompt?
-B_PASSWORD="secret"
+version() {
+  echo -e "\e[32mButlersh CLI\e[0m version \e[33m$B_VERSION\e[0m"
+}
 
 B_USER="forge"
+# TODO: Should it be passed via --password=<password> option or prompt?
+B_PASSWORD="secret"
+# TODO: Might it allow --group=<group_name> option?
+B_GROUP="$B_USER"
 
 for OPTION in "$@"
 do
     NAME="$(cut -d'=' -f1 <<<"$OPTION")"
     VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
 
-    if [ "$NAME" = '--user' ]; then
+    if [ "$NAME" = '--help' ]; then
+        help
+        exit 0
+    elif [ "$NAME" = '--version' ]; then
+        version
+        exit 0
+    elif [ "$NAME" = '--user' ]; then
         B_USER="$VALUE"
     else
         echo "butlersh.ERROR: Unrecognized option $NAME."
@@ -25,8 +42,12 @@ do
     fi
 done
 
-# TODO: Might it allow --group=<group_name> option?
-B_GROUP="$B_USER"
+B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
+
+wget -qO- "$B_BASE_URL/lib/check.sh" | bash
+
+export DEBIAN_FRONTEND=noninteractive
+export NEEDRESTART_MODE=a
 
 if id "$B_USER" >/dev/null 2>&1; then
     echo "butlersh.INFO: The user \"$B_USER\" already exists."
@@ -40,18 +61,15 @@ usermod -aG sudo "$B_USER"
 
 rm -rf /etc/ssh/sshd_config.d/*
 
-touch "/etc/ssh/sshd_config.d/$B_USER-init.conf"
+touch "/etc/ssh/sshd_config.d/butlersh.conf"
 
-chmod 600 "/etc/ssh/sshd_config.d/$B_USER-init.conf"
+chmod 600 "/etc/ssh/sshd_config.d/butlersh.conf"
 
-export SSHD_CONFIG="
-PermitRootLogin no
+export SSHD_CONFIG="PermitRootLogin no
 PasswordAuthentication no
 PermitEmptyPasswords no
-PubkeyAuthentication yes
-
-AllowGroups $B_GROUP"
-if ! echo "${SSHD_CONFIG}" | tee "/etc/ssh/sshd_config.d/$B_USER-init.conf"; then
+PubkeyAuthentication yes"
+if ! echo "${SSHD_CONFIG}" | tee "/etc/ssh/sshd_config.d/butlersh.conf"; then
     echo "butlersh.ERROR: Can NOT configure SSH!" && exit 1
 fi
 
@@ -89,5 +107,5 @@ if [ ! -f /var/lib/butlersh/data.txt ]; then
   touch /var/lib/butlersh/data.txt
 fi
 
-echo "user:$B_USER" > /var/lib/butlersh/data.txt
-echo "user-pass:$B_PASSWORD" > /var/lib/butlersh/data.txt
+echo "user:$B_USER" >> /var/lib/butlersh/data.txt
+echo "user-pass:$B_PASSWORD" >> /var/lib/butlersh/data.txt
