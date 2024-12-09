@@ -44,6 +44,7 @@ apt-get install -y \
     php"${B_PHP_VERSION}"-fpm \
     php"${B_PHP_VERSION}"-gd \
     php"${B_PHP_VERSION}"-imap \
+    php"${B_PHP_VERSION}"-intl \
     php"${B_PHP_VERSION}"-mbstring \
     php"${B_PHP_VERSION}"-mcrypt \
     php"${B_PHP_VERSION}"-mysql \

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export B_VERSION=${env:-dev-main}
+
 help() {
   echo -e "\e[33mDescription:\e[0m"
   echo "  Set up security for a fresh server"
@@ -10,7 +12,7 @@ help() {
   echo -e "  \e[32m-V,\e[0m \e[32m--version\e[0m    Display this application version"
   echo
   echo -e "\e[33mHelp:\e[0m"
-  echo -e "  Running \e[32m./security-setup.sh --user=forge\e[0m will create a sudo user called \e[32mforge\e[0m."
+  echo -e "  Running \e[32mbutlersh security:setup --user=forge\e[0m will create a sudo user called \e[32mforge\e[0m."
 }
 
 version() {
@@ -103,9 +105,9 @@ apt-get autoclean
 
 mkdir -p /var/lib/butlersh
 
-if [ ! -f /var/lib/butlersh/data.txt ]; then
-  touch /var/lib/butlersh/data.txt
+if [ ! -f /var/lib/butlersh/security.txt ]; then
+  touch /var/lib/butlersh/security.txt
 fi
 
-echo "user:$B_USER" >> /var/lib/butlersh/data.txt
-echo "user-pass:$B_PASSWORD" >> /var/lib/butlersh/data.txt
+echo "username:$B_USER" >> /var/lib/butlersh/security.txt
+echo "password:$B_PASSWORD" >> /var/lib/butlersh/security.txt
