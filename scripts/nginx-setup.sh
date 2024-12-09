@@ -1,47 +1,46 @@
-#!/usr/bin/env bash
+run_nginx_setup() {
+  B_CONFIG_URL="https://raw.githubusercontent.com/butlersh/core/build/config"
+  B_USER="forge"
 
-B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
-B_CONFIG_URL="https://raw.githubusercontent.com/butlersh/core/main/config"
+  for OPTION in "$@"
+  do
+      NAME="$(cut -d'=' -f1 <<<"$OPTION")"
+      VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
 
-wget -qO- "$B_BASE_URL/lib/check.sh" | bash
+      if [ "$NAME" = '--user' ]; then
+          B_USER="$VALUE"
+      else
+          echo "butlersh.ERROR: Unrecognized option $NAME"
+          exit 1
+      fi
+  done
 
-export DEBIAN_FRONTEND=noninteractive
-export NEEDRESTART_MODE=a
+  check_supported_os
+  check_root_privileges
 
-B_USER="forge"
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
 
-for OPTION in "$@"
-do
-    NAME="$(cut -d'=' -f1 <<<"$OPTION")"
-    VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
+  # Install nginx with certbot to use free SSL via Letsencrypt.
+  apt-get install -y nginx certbot python3-certbot-nginx
 
-    if [ "$NAME" = '--user' ]; then
-        B_USER="$VALUE"
-    else
-        echo "butlersh.ERROR: Unrecognized option $NAME"
-        exit 1
-    fi
-done
+  if [ -d /etc/nginx ]; then
+    rm -rf /etc/nginx.old
 
-# Install nginx with certbot to use free SSL via Letsencrypt.
-apt-get install -y nginx certbot python3-certbot-nginx
+    mv /etc/nginx /etc/nginx.old
+  fi
 
-if [ -d /etc/nginx ]; then
-  rm -rf /etc/nginx.old
+  git clone https://github.com/h5bp/server-configs-nginx.git /etc/nginx
 
-  mv /etc/nginx /etc/nginx.old
-fi
+  mkdir -p /etc/nginx/extra
 
-git clone https://github.com/h5bp/server-configs-nginx.git /etc/nginx
+  wget -O fastcgi.conf "$B_CONFIG_URL/fastcgi.conf" --quiet
+  wget -O fastcgi-php.conf "$B_CONFIG_URL/fastcgi-php.conf" --quiet
 
-mkdir -p /etc/nginx/extra
+  mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
+  mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf
 
-wget -O fastcgi.conf "$B_CONFIG_URL/fastcgi.conf" --quiet
-wget -O fastcgi-php.conf "$B_CONFIG_URL/fastcgi-php.conf" --quiet
+  sed -i "s/www-data/${B_USER}/g" /etc/nginx/nginx.conf;
 
-mv fastcgi.conf /etc/nginx/extra/fastcgi.conf
-mv fastcgi-php.conf /etc/nginx/extra/fastcgi-php.conf
-
-sed -i "s/www-data/${B_USER}/g" /etc/nginx/nginx.conf;
-
-systemctl restart nginx
+  systemctl restart nginx
+}

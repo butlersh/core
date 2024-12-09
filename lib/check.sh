@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-check_root() {
+check_root_privileges() {
     if [ "$USER" != 'root' ]; then
         echo 'butlersh.ERROR: Please run this script as root.'
         exit 1
@@ -8,6 +6,7 @@ check_root() {
 }
 
 check_supported_os() {
+  # TODO: If lsb_release does not exit, use /etc/os-release instead.
   OS_DISTRIB_NAME=${OS_DISTRIB_NAME:-$(lsb_release -is)}
   OS_RELEASE_NAME=${OS_RELEASE_NAME:-$(lsb_release -cs)}
 
@@ -35,8 +34,3 @@ check_supported_os() {
     exit 1
   fi
 }
-
-
-check_root
-
-check_supported_os
