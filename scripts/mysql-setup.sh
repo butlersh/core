@@ -1,8 +1,47 @@
 #!/usr/bin/env bash
+check_root_privileges() {
+    if [ "$USER" != 'root' ]; then
+        echo 'butlersh.ERROR: Please run this script as root.'
+        exit 1
+    fi
+}
 
-B_BASE_URL="https://raw.githubusercontent.com/butlersh/core/main"
+check_supported_os() {
+  # TODO: If lsb_release does not exit, use /etc/os-release instead.
+  OS_DISTRIB_NAME=${OS_DISTRIB_NAME:-$(lsb_release -is)}
+  OS_RELEASE_NAME=${OS_RELEASE_NAME:-$(lsb_release -cs)}
 
-wget -qO- "$B_BASE_URL/lib/check.sh" | bash
+  case "${OS_DISTRIB_NAME}" in
+    "Ubuntu" | "ubuntu")
+      DISTRIB_NAME="ubuntu"
+      case "${OS_RELEASE_NAME}" in
+        "noble" | "jammy" | "focal")
+          RELEASE_NAME="${OS_RELEASE_NAME}"
+        ;;
+        *)
+          RELEASE_NAME="unsupported"
+        ;;
+      esac
+    ;;
+    *)
+      DISTRIB_NAME="unsupported"
+    ;;
+  esac
+
+  if [[ "${DISTRIB_NAME}" == "unsupported" || "${RELEASE_NAME}" == "unsupported" ]]; then
+    echo "This Linux distribution isn't supported yet."
+    echo "If you'd like it to be, let us know!"
+    echo "👉🏻 https://github.com/butlersh/butlersh/issues"
+    exit 1
+  fi
+}
+export B_VERSION=${env:-dev-main}
+
+display_version() {
+  echo -e "\e[32mButlersh CLI\e[0m version \e[33m$B_VERSION\e[0m"
+}
+check_supported_os
+check_root_privileges
 
 export DEBIAN_FRONTEND=noninteractive
 
