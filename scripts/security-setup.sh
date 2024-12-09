@@ -1,46 +1,4 @@
-#!/usr/bin/env bash
-check_root_privileges() {
-    if [ "$USER" != 'root' ]; then
-        echo 'butlersh.ERROR: Please run this script as root.'
-        exit 1
-    fi
-}
-
-check_supported_os() {
-  # TODO: If lsb_release does not exit, use /etc/os-release instead.
-  OS_DISTRIB_NAME=${OS_DISTRIB_NAME:-$(lsb_release -is)}
-  OS_RELEASE_NAME=${OS_RELEASE_NAME:-$(lsb_release -cs)}
-
-  case "${OS_DISTRIB_NAME}" in
-    "Ubuntu" | "ubuntu")
-      DISTRIB_NAME="ubuntu"
-      case "${OS_RELEASE_NAME}" in
-        "noble" | "jammy" | "focal")
-          RELEASE_NAME="${OS_RELEASE_NAME}"
-        ;;
-        *)
-          RELEASE_NAME="unsupported"
-        ;;
-      esac
-    ;;
-    *)
-      DISTRIB_NAME="unsupported"
-    ;;
-  esac
-
-  if [[ "${DISTRIB_NAME}" == "unsupported" || "${RELEASE_NAME}" == "unsupported" ]]; then
-    echo "This Linux distribution isn't supported yet."
-    echo "If you'd like it to be, let us know!"
-    echo "👉🏻 https://github.com/butlersh/butlersh/issues"
-    exit 1
-  fi
-}
-export B_VERSION=${env:-dev-main}
-
-display_version() {
-  echo -e "\e[32mButlersh CLI\e[0m version \e[33m$B_VERSION\e[0m"
-}
-display_help() {
+help_security_setup() {
   echo -e "\e[33mDescription:\e[0m"
   echo "  Set up security for a fresh server"
   echo
@@ -53,94 +11,96 @@ display_help() {
   echo -e "  Running \e[32mbutlersh security:setup --user=forge\e[0m will create a sudo user called \e[32mforge\e[0m."
 }
 
-B_USER="forge"
-B_GROUP="forge"
-# TODO: Should it be passed via --password=<password> option or prompt?
-B_PASSWORD="secret"
+run_security_setup() {
+  B_USER="forge"
+  B_GROUP="forge"
+  # TODO: Should it be passed via --password=<password> option or prompt?
+  B_PASSWORD="secret"
 
-for OPTION in "$@"
-do
-    NAME="$(cut -d'=' -f1 <<<"$OPTION")"
-    VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
+  for OPTION in "$@"
+  do
+      NAME="$(cut -d'=' -f1 <<<"$OPTION")"
+      VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
 
-    if [ "$NAME" = '--help' ]; then
-        display_help
-        exit 0
-    elif [ "$NAME" = '--version' ]; then
-        display_version
-        exit 0
-    elif [ "$NAME" = '--user' ]; then
-        B_USER="$VALUE"
-        B_GROUP="$B_USER" # TODO: Might it allow --group=<group_name> option?
-    else
-        echo "butlersh.ERROR: Unrecognized option $NAME."
-        exit 1
-    fi
-done
+      if [ "$NAME" = '--help' ]; then
+          help_security_setup
+          exit 0
+      elif [ "$NAME" = '--version' ]; then
+          display_version
+          exit 0
+      elif [ "$NAME" = '--user' ]; then
+          B_USER="$VALUE"
+          B_GROUP="$B_USER" # TODO: Might it allow --group=<group_name> option?
+      else
+          echo "butlersh.ERROR: Unrecognized option $NAME."
+          exit 1
+      fi
+  done
 
-check_supported_os
-check_root_privileges
+  check_supported_os
+  check_root_privileges
 
-export DEBIAN_FRONTEND=noninteractive
-export NEEDRESTART_MODE=a
+  export DEBIAN_FRONTEND=noninteractive
+  export NEEDRESTART_MODE=a
 
-if id "$B_USER" >/dev/null 2>&1; then
-    echo "butlersh.INFO: The user \"$B_USER\" already exists."
-else
-    adduser --disabled-password --gecos "Using $B_USER instead of root" "${B_USER}"
+  if id "$B_USER" >/dev/null 2>&1; then
+      echo "butlersh.INFO: The user \"$B_USER\" already exists."
+  else
+      adduser --disabled-password --gecos "Using $B_USER instead of root" "${B_USER}"
 
-    usermod --password $(echo "${B_PASSWORD}" | openssl passwd -1 -stdin) "${B_USER}"
-fi
+      usermod --password $(echo "${B_PASSWORD}" | openssl passwd -1 -stdin) "${B_USER}"
+  fi
 
-usermod -aG sudo "$B_USER"
+  usermod -aG sudo "$B_USER"
 
-rm -rf /etc/ssh/sshd_config.d/*
+  rm -rf /etc/ssh/sshd_config.d/*
 
-touch "/etc/ssh/sshd_config.d/butlersh.conf"
+  touch "/etc/ssh/sshd_config.d/butlersh.conf"
 
-chmod 600 "/etc/ssh/sshd_config.d/butlersh.conf"
+  chmod 600 "/etc/ssh/sshd_config.d/butlersh.conf"
 
-export SSHD_CONFIG="PermitRootLogin no
-PasswordAuthentication no
-PermitEmptyPasswords no
-PubkeyAuthentication yes"
-if ! echo "${SSHD_CONFIG}" | tee "/etc/ssh/sshd_config.d/butlersh.conf"; then
-    echo "butlersh.ERROR: Can NOT configure SSH!" && exit 1
-fi
+  export SSHD_CONFIG="PermitRootLogin no
+  PasswordAuthentication no
+  PermitEmptyPasswords no
+  PubkeyAuthentication yes"
+  if ! echo "${SSHD_CONFIG}" | tee "/etc/ssh/sshd_config.d/butlersh.conf"; then
+      echo "butlersh.ERROR: Can NOT configure SSH!" && exit 1
+  fi
 
-mkdir -p "/home/$B_USER/.ssh"
+  mkdir -p "/home/$B_USER/.ssh"
 
-touch "/home/$B_USER/.ssh/authorized_keys"
+  touch "/home/$B_USER/.ssh/authorized_keys"
 
-chmod 660 "/home/$B_USER/.ssh/authorized_keys"
+  chmod 660 "/home/$B_USER/.ssh/authorized_keys"
 
-# Because DigitalOcean, Hetzner Cloud,... allows to SSH using root, so I just copy these keys.
-# Thus, right after provision process, I can SSH using forge without adding additional SSH keys.
-if [ -f /root/.ssh/authorized_keys ]; then
-    cat /root/.ssh/authorized_keys > "/home/$B_USER/.ssh/authorized_keys"
-fi
+  # Because DigitalOcean, Hetzner Cloud,... allows to SSH using root, so I just copy these keys.
+  # Thus, right after provision process, I can SSH using forge without adding additional SSH keys.
+  if [ -f /root/.ssh/authorized_keys ]; then
+      cat /root/.ssh/authorized_keys > "/home/$B_USER/.ssh/authorized_keys"
+  fi
 
-chown -R "$B_USER":"$B_GROUP" "/home/$B_USER/.ssh"
+  chown -R "$B_USER":"$B_GROUP" "/home/$B_USER/.ssh"
 
-systemctl restart ssh
+  systemctl restart ssh
 
-apt-get update
+  apt-get update
 
-apt-get install -y software-properties-common curl git unzip zip fail2ban
+  apt-get install -y software-properties-common curl git unzip zip fail2ban
 
-systemctl restart fail2ban
+  systemctl restart fail2ban
 
-apt-get upgrade -y
+  apt-get upgrade -y
 
-apt-get autoremove
+  apt-get autoremove
 
-apt-get autoclean
+  apt-get autoclean
 
-mkdir -p /var/lib/butlersh
+  mkdir -p /var/lib/butlersh
 
-if [ ! -f /var/lib/butlersh/security.txt ]; then
-  touch /var/lib/butlersh/security.txt
-fi
+  if [ ! -f /var/lib/butlersh/security.txt ]; then
+    touch /var/lib/butlersh/security.txt
+  fi
 
-echo "username:$B_USER" >> /var/lib/butlersh/security.txt
-echo "password:$B_PASSWORD" >> /var/lib/butlersh/security.txt
+  echo "username:$B_USER" >> /var/lib/butlersh/security.txt
+  echo "password:$B_PASSWORD" >> /var/lib/butlersh/security.txt
+}
