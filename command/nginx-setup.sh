@@ -35,6 +35,8 @@ run_nginx_setup_command() {
   export DEBIAN_FRONTEND=noninteractive
   export NEEDRESTART_MODE=a
 
+  add-apt-repository -y ppa:ondrej/nginx
+
   # Install nginx with certbot to use free SSL via Letsencrypt.
   apt-get install -y nginx certbot python3-certbot-nginx
 
