@@ -7,7 +7,6 @@ help_security_setup_command() {
   io_line '  <success>    --user=USER</success>  The user name you want to create <comment>[default: "forge"]</comment>'
   io_line '  <success>-h, --help</success>       Display help for the given command. When no command is given, display help for the <success>list</success> command'
   io_line '  <success>-V, --version</success>    Display this application version'
-  io_line
 
   exit 0
 }

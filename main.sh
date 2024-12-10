@@ -1,69 +1,108 @@
 export B_ENV=${env:-production}
 export B_VERSION=${env:-dev-main}
 
-# Start running
+B_COMMAND=''
+B_OPTIONS=()
+B_OPTIONS_STR=''
+B_ARGUMENTS=()
+B_ARGUMENTS_STR=''
+B_NEEDS_HELP="no"
 
-# TODO: Handle option not found error.
 for PARAM in "$@"
 do
     NAME="$(cut -d'=' -f1 <<<"$PARAM")"
 
-    if [ "$NAME" = '--help' ]; then
+    if [ "$PARAM" = 'help' ]; then
+        B_NEEDS_HELP='yes'
+    elif [ "$NAME" = '--help' ]; then
         if [ "$PARAM" = '--help' ]; then
-            if [ -z "$COMMAND" ]; then
-                help_list_command
-            else
-                case $COMMAND in
-                    "mysql:setup")
-                        B_VERSION="$B_VERSION" help_mysql_setup_command
-                    ;;
-                    "nginx:setup")
-                        B_VERSION="$B_VERSION" help_nginx_setup_command
-                    ;;
-                    "php:setup")
-                        B_VERSION="$B_VERSION" help_php_setup_command
-                    ;;
-                    "security:setup")
-                        B_VERSION="$B_VERSION" help_security_setup_command
-                    ;;
-                    *)
-                        B_VERSION="$B_VERSION" help_list_command
-                        io_line "$COMMAND was not found"
-                    ;;
-                esac
-            fi
-
+            B_NEEDS_HELP='yes'
+        else
+            io_print_error "The --help option does not accept a value"
+            exit 1
         fi
     elif [ "$NAME" = '--version' ]; then
         if [ "$PARAM" = '--version' ]; then
             display_version
+        else
+            io_print_error "The --version option does not accept a value"
+            exit 1
         fi
+    elif [[ "$PARAM" == -* ]]; then
+        B_OPTIONS+=("$PARAM")
+        B_OPTIONS_STR="$B_OPTIONS_STR $PARAM"
+    elif [ -z "$B_COMMAND" ]; then
+        B_COMMAND="$PARAM"
     else
-        COMMAND=$PARAM
+        B_ARGUMENTS+=("$PARAM")
+        B_ARGUMENTS_STR="$B_ARGUMENTS_STR $PARAM"
     fi
 done
 
-shift
+if [ $B_NEEDS_HELP = 'yes' ] && [ -z "$B_COMMAND" ]; then
+    help_list_command
+fi
 
-# TODO: Handle command not found error.
-case $COMMAND in
-    "mysql:setup")
-        B_VERSION="$B_VERSION" run_mysql_setup_command "$@"
-    ;;
+if [ $B_NEEDS_HELP = 'yes' ] && [ "$B_COMMAND" != '' ]; then
+    case $B_COMMAND in
+        "list")
+            help_list_command
+        ;;
+        "mysql:setup")
+            help_mysql_setup_command
+        ;;
+        "nginx:setup")
+            help_nginx_setup_command
+        ;;
+        "php:setup")
+            help_php_setup_command
+        ;;
+        "security:setup")
+            help_security_setup_command
+        ;;
+        *)
+            io_print_error "The <comment>$RUNNING_COMMAND</comment> command was not found."
+            exit 1
+        ;;
+    esac
+fi
 
-    "nginx:setup")
-        B_VERSION="$B_VERSION" run_nginx_setup_command "$@"
-    ;;
+if [ -z "$B_COMMAND" ]; then
+    run_list_command
+    exit 0
+fi
 
-    "php:setup")
-        B_VERSION="$B_VERSION" run_php_setup_command "$@"
-    ;;
+run() {
+    RUNNING_COMMAND="$1"
 
-    "security:setup")
-        B_VERSION="$B_VERSION" run_security_setup_command "$@"
-    ;;
+    shift
 
-    *)
-        B_VERSION="$B_VERSION" run_list_command
-    ;;
-esac
+    case $RUNNING_COMMAND in
+        "list")
+            run_list_command "$@"
+        ;;
+
+        "mysql:setup")
+            run_mysql_setup_command "$@"
+        ;;
+
+        "nginx:setup")
+            run_nginx_setup_command "$@"
+        ;;
+
+        "php:setup")
+            run_php_setup_command "$@"
+        ;;
+
+        "security:setup")
+            run_security_setup_command "$@"
+        ;;
+
+        *)
+            io_print_error "The <comment>$RUNNING_COMMAND</comment> command was not found."
+            exit 1
+        ;;
+    esac
+}
+
+run "$B_COMMAND" $B_ARGUMENTS_STR $B_OPTIONS_STR
