@@ -12,7 +12,7 @@ help_list_command() {
   io_line
 
   io_comment 'Options:'
-  io_line '  <success>-h, --help</success>     Display help for the given command. When no command is given display help for the <success>list</success> command'
+  io_line '  <success>-h, --help</success>     Display help for the given command. When no command is given, display help for the <success>list</success> command'
   io_line '  <success>-V, --version</success>  Display this application version'
   io_line
 
@@ -20,6 +20,8 @@ help_list_command() {
   io_line '  The <success>help</success> command displays help for a given command:'
   io_line
   io_line '    <success>butlersh help list</success>'
+
+  exit 0
 }
 
 run_list_command() {
@@ -31,12 +33,11 @@ run_list_command() {
   io_line
 
   io_comment "Options:"
-  io_line '  <success>-h, --help</success>      Display help for the given command. When no command is given display help for the <success>list</success> command'
+  io_line '  <success>-h, --help</success>      Display help for the given command. When no command is given, display help for the <success>list</success> command'
   io_line '  <success>-V, --version</success>   Display this application version'
   io_line
 
   io_comment "Available commands:"
-  io_line '  <success>help</success>            Display help for a command'
   io_line '  <success>list</success>            List commands'
   io_comment ' mysql'
   io_line '  <success>mysql:setup</success>     Set up MySQL for the current server'

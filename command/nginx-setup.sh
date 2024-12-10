@@ -1,4 +1,21 @@
-run_nginx_setup() {
+help_nginx_setup_command() {
+  io_comment 'Description:'
+  io_line '  Set up Nginx for the current server'
+  io_line
+
+  io_comment 'Usage:'
+  io_line '  nginx:setup [options]'
+  io_line
+
+  io_comment 'Options:'
+  io_line '  <success>    --user=USER</success>  The user is for running nginx workers <comment>[default: "forge"]</comment>'
+  io_line '  <success>-h, --help</success>       Display help for the given command. When no command is given, display help for the <success>list</success> command'
+  io_line '  <success>-V, --version</success>    Display this application version'
+
+  exit 0
+}
+
+run_nginx_setup_command() {
   B_CONFIG_URL="https://raw.githubusercontent.com/butlersh/core/build/config"
   B_USER="forge"
 
@@ -9,9 +26,6 @@ run_nginx_setup() {
 
       if [ "$NAME" = '--user' ]; then
           B_USER="$VALUE"
-      else
-          echo "butlersh.ERROR: Unrecognized option $NAME"
-          exit 1
       fi
   done
 

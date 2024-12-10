@@ -1,19 +1,18 @@
-help_security_setup() {
+help_security_setup_command() {
   io_comment 'Description:'
   io_line '  Set up security for the current server'
   io_line
 
   io_comment 'Options:'
-  io_line '  <success>--user=USER</success>      The user name you want to create <comment>[default: "forge"]</comment>'
-  io_line '  <success>-h, --help</success>       Display help for the given command. When no command is given display help for the <success>list</success> command'
+  io_line '  <success>    --user=USER</success>  The user name you want to create <comment>[default: "forge"]</comment>'
+  io_line '  <success>-h, --help</success>       Display help for the given command. When no command is given, display help for the <success>list</success> command'
   io_line '  <success>-V, --version</success>    Display this application version'
   io_line
 
-  io_comment 'Help:'
-  io_line '  Running <success>butlersh security:setup --user=forge</success> will create a sudo user called <success>forge</success>.'
+  exit 0
 }
 
-run_security_setup() {
+run_security_setup_command() {
   B_USER="forge"
   B_GROUP="forge"
   # TODO: Should it be passed via --password=<password> option or prompt?
@@ -24,13 +23,7 @@ run_security_setup() {
       NAME="$(cut -d'=' -f1 <<<"$OPTION")"
       VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
 
-      if [ "$NAME" = '--help' ]; then
-          help_security_setup
-          exit 0
-      elif [ "$NAME" = '--version' ]; then
-          display_version
-          exit 0
-      elif [ "$NAME" = '--user' ]; then
+      if [ "$NAME" = '--user' ]; then
           B_USER="$VALUE"
           B_GROUP="$B_USER" # TODO: Might it allow --group=<group_name> option?
       else

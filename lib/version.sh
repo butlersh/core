@@ -1,5 +1,7 @@
 export B_VERSION=${env:-dev-main}
 
 display_version() {
-  echo -e "\e[32mButlersh\e[0m version \e[33m$B_VERSION\e[0m"
+  io_line "<success>Butlersh</success> version <comment>$B_VERSION</comment>"
+
+  exit 0
 }

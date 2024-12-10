@@ -1,4 +1,26 @@
-function run_php_setup() {
+help_php_setup_command() {
+  io_comment 'Description:'
+  io_line '  Set up PHP for the current server'
+  io_line
+
+  io_comment 'Usage:'
+  io_line '  php:setup [options] [--] <version>'
+  io_line
+
+  io_comment 'Arguments:'
+  io_line '  <success>version</success>        The expected PHP version <comment>[e.g. "8.4"]</comment>'
+  io_line
+
+  io_comment 'Options:'
+  io_line '  <success>    --user=USER</success>    The user is for running PHP-FPM workers <comment>[default: "forge"]</comment>'
+  io_line '  <success>    --group=GROUP</success>  The group is for running PHP-FPM workers <comment>[default: "forge"]</comment>'
+  io_line '  <success>-h, --help</success>         Display help for the given command. When no command is given, display help for the <success>list</success> command'
+  io_line '  <success>-V, --version</success>      Display this application version'
+
+  exit 0
+}
+
+function run_php_setup_command() {
   B_USER="forge"
   B_GROUP="$B_USER"
   B_PHP_VERSION="$1"
@@ -12,11 +34,8 @@ function run_php_setup() {
           B_USER="$VALUE"
       elif [ "$NAME" = '--group' ]; then
           B_GROUP="$VALUE"
-      elif [ "$NAME" = '--version' ]; then
-          B_PHP_VERSION="$VALUE"
       else
-          echo "butlersh.ERROR: Unrecognized option $NAME"
-          exit 1
+          B_PHP_VERSION=$OPTION
       fi
   done
 

@@ -1,3 +1,23 @@
+help_mysql_setup_command() {
+  io_comment 'Description:'
+  io_line '  Set up MySQL for the current server'
+  io_line
+
+  io_comment 'Usage:'
+  io_line '  mysql:setup [options] [--] <version>'
+  io_line
+
+  io_comment 'Arguments:'
+  io_line '  <success>version</success>        The expected MySQL version <comment>[e.g. "8.0"]</comment>'
+  io_line
+
+  io_comment 'Options:'
+  io_line '  <success>-h, --help</success>     Display help for the given command. When no command is given, display help for the <success>list</success> command'
+  io_line '  <success>-V, --version</success>  Display this application version'
+
+  exit 0
+}
+
 mysql80 () {
   echo "butlersh.INFO: Start installing MySQL $B_MYSQL_VERSION"
 
@@ -7,28 +27,15 @@ mysql80 () {
   apt-get -y install mysql-server
 
   echo "butlersh.INFO: Finished installing MySQL $B_MYSQL_VERSION"
-
-  mysql --version
 }
 
-run_mysql_setup() {
+run_mysql_setup_command() {
   B_MYSQL_VERSION='8.0'
 
   # TODO: Should be customizable.
   B_MYSQL_PASSWORD="secret"
 
-  for OPTION in "$@"
-  do
-      NAME="$(cut -d'=' -f1 <<<"$OPTION")"
-      VALUE="$(cut -d'=' -f2 <<<"$OPTION")"
-
-      if [ "$NAME" = '--version' ]; then
-          B_MYSQL_VERSION="$VALUE"
-      else
-          echo "butlersh.ERROR: Unrecognized argument/option $NAME."
-          exit 1
-      fi
-  done
+  B_MYSQL_VERSION=$1
 
   check_supported_os
   check_root_privileges
