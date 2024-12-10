@@ -1,14 +1,16 @@
 help_security_setup() {
-  echo -e "\e[33mDescription:\e[0m"
-  echo "  Set up security for a fresh server"
-  echo
-  echo -e "\e[33mOptions:\e[0m"
-  echo -e "      \e[32m--user=USER\e[0m  The user name you want to create \e[33m[default: \"forge\"]\e[0m"
-  echo -e "  \e[32m-h,\e[0m \e[32m--help\e[0m       Display help for the given command. When no command is given display help for the \e[33mlist\e[0m command"
-  echo -e "  \e[32m-V,\e[0m \e[32m--version\e[0m    Display this application version"
-  echo
-  echo -e "\e[33mHelp:\e[0m"
-  echo -e "  Running \e[32mbutlersh security:setup --user=forge\e[0m will create a sudo user called \e[32mforge\e[0m."
+  io_comment 'Description:'
+  io_line '  Set up security for the current server'
+  io_line
+
+  io_comment 'Options:'
+  io_line '  <success>--user=USER</success>      The user name you want to create <comment>[default: "forge"]</comment>'
+  io_line '  <success>-h, --help</success>       Display help for the given command. When no command is given display help for the <success>list</success> command'
+  io_line '  <success>-V, --version</success>    Display this application version'
+  io_line
+
+  io_comment 'Help:'
+  io_line '  Running <success>butlersh security:setup --user=forge</success> will create a sudo user called <success>forge</success>.'
 }
 
 run_security_setup() {
